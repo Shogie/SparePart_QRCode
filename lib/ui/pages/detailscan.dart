@@ -5,6 +5,7 @@ import 'package:skripsi/models/model_data_alat.dart';
 import 'package:http/http.dart' as http;
 import 'package:skripsi/models/model_get_scan.dart';
 import 'package:skripsi/shared/theme,.dart';
+
 import 'package:dropdown_search/dropdown_search.dart';
 
 class DetailScan extends StatefulWidget {
@@ -28,7 +29,7 @@ class _DetailScanState extends State<DetailScan> {
   String id2 = "";
   String id3 = "";
 
-  late bool statusUpdate;
+  bool statusUpdate = false;
 
   List<String> dataDropdown = ["Normal", 'Tidak Normal/Rusak'];
 
@@ -56,7 +57,7 @@ class _DetailScanState extends State<DetailScan> {
         var status = jsonData['response']['status'];
 
         if (status == "true") {
-          status = true;
+          statusUpdate = true;
         } else {
           statusUpdate = false;
           throw (jsonData['response']['desc']);
@@ -76,7 +77,6 @@ class _DetailScanState extends State<DetailScan> {
         ),
       );
 
-      print("isinya ${response.body}");
 
       if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
@@ -113,7 +113,6 @@ class _DetailScanState extends State<DetailScan> {
 
   @override
   Widget build(BuildContext context) {
-    statusUpdate = false;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -129,10 +128,12 @@ class _DetailScanState extends State<DetailScan> {
         ),
         backgroundColor: bgdefault,
         body: scandetailvalue.isEmpty
-            ? Text(
-                "Produk Tidak Ditemukan, ${widget.kode}",
-                style: TextStyle(fontSize: 20),
-              )
+            ? Center(
+              child: Text(
+                  "Perangkat, ${widget.kode}",
+                  style: TextStyle(fontSize: 20),
+                ),
+            )
             : SingleChildScrollView(
                 padding: EdgeInsets.all(20),
                 // margin: EdgeInsets.only(top: 20),
@@ -184,14 +185,14 @@ class _DetailScanState extends State<DetailScan> {
                                   borderSide: const BorderSide(
                                       color: Colors.grey, width: 1),
                                   borderRadius: BorderRadius.circular(8)))),
-                      selectedItem: dataDropdown[0],
+                      
                       onChanged: (value) {
                         // status = value!;
                         option1 = value!;
                       },
                       dropdownBuilder: (context, selectedItem) {
                         return selectedItem == null
-                            ? Text(dataDropdown[0])
+                            ? Text("Pilih status")
                             : Text(selectedItem);
                       },
                     ),
@@ -229,14 +230,14 @@ class _DetailScanState extends State<DetailScan> {
                                   borderSide: const BorderSide(
                                       color: Colors.grey, width: 1),
                                   borderRadius: BorderRadius.circular(8)))),
-                      selectedItem: dataDropdown[0],
+                      
                       onChanged: (value) {
                         // status = value!;
                         option2 = value!;
                       },
                       dropdownBuilder: (context, selectedItem) {
                         return selectedItem == null
-                            ? Text(dataDropdown[0])
+                            ? Text("Pilih status")
                             : Text(selectedItem);
                       },
                     ),
@@ -274,14 +275,14 @@ class _DetailScanState extends State<DetailScan> {
                                   borderSide: const BorderSide(
                                       color: Colors.grey, width: 1),
                                   borderRadius: BorderRadius.circular(8)))),
-                      selectedItem: dataDropdown[0],
+                      
                       onChanged: (value) {
                         // status = value!;
                         option3 = value!;
                       },
                       dropdownBuilder: (context, selectedItem) {
                         return selectedItem == null
-                            ? Text(dataDropdown[0])
+                            ? Text("Pilih status")
                             : Text(selectedItem);
                       },
                     ),
