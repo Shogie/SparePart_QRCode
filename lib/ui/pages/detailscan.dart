@@ -5,6 +5,7 @@ import 'package:skripsi/models/model_data_alat.dart';
 import 'package:http/http.dart' as http;
 import 'package:skripsi/models/model_get_scan.dart';
 import 'package:skripsi/shared/theme,.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 class DetailScan extends StatefulWidget {
   final String kode;
@@ -17,28 +18,13 @@ class DetailScan extends StatefulWidget {
 }
 
 class _DetailScanState extends State<DetailScan> {
-  // late cDataAlat produk;
-
-  // Future<cDataAlat> get_data() async {
-  //   await http.get(
-  //     Uri.parse("http://10.153.17.118/Skripsi/get_data.php?kode=${widget.kode}")
-  //         .then((resoponse) {
-  //       var response;
-  //       if (jsonDecode(response.body) != null) {
-  //         setState(() {
-  //           produk = cDataAlat.fromJson(jsonDecode(response.body));
-  //         });
-  //       }
-  //     }),
-  //     // Uri.parse("http://127.0.0.1/Skripsi/tampil_alat.php"),
-  //     // Uri.parse("http://192.168.42.12/Skripsi/tampil_alat.php"),
-  //   );
-  // }
   late String SelectName;
-  // late Pesan produk;
-  // var produk;
-  // late Map<String, dynamic> produk;
   List<Pesan> scandetailvalue = [];
+  late String option1;
+  late String option2;
+  late String option3;
+
+  List<String> dataDropdown = ["Normal", 'Tidak Normal/Rusak'];
 
   Future<void> get_data() async {
     try {
@@ -54,7 +40,6 @@ class _DetailScanState extends State<DetailScan> {
         var jsonData = jsonDecode(response.body);
         setState(() {
           List scandetail = jsonData['pesan'];
-          
 
           for (var item in scandetail) {
             scandetailvalue.add(
@@ -122,10 +107,11 @@ class _DetailScanState extends State<DetailScan> {
                       style: TextStyle(fontSize: 20),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 15),
+                      margin: EdgeInsets.only(top: 12),
                       width: double.infinity,
                       height: 40,
                       decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
                         color: cardlist,
                       ),
                       child: Column(
@@ -138,79 +124,123 @@ class _DetailScanState extends State<DetailScan> {
                         ],
                       ),
                     ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    DropdownSearch<String>(
+                      items: dataDropdown,
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                          dropdownSearchDecoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: Colors.grey, width: 1),
+                                  borderRadius: BorderRadius.circular(8)))),
+                      selectedItem: dataDropdown[0],
+                      onChanged: (value) {
+                        // status = value!;
+                        option1 = value!;
+                      },
+                      dropdownBuilder: (context, selectedItem) {
+                        return selectedItem == null
+                            ? Text(dataDropdown[0])
+                            : Text(selectedItem);
+                      },
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     Container(
+                      margin: EdgeInsets.only(top: 12),
+                      width: double.infinity,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: cardlist,
+                      ),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TextFormField(
-                            decoration: InputDecoration(
-                              hintText: 'Masukkan Status Alat',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
+                          Text(
+                            "${scandetailvalue[1].namaStatus}",
+                            style: TextStyle(fontSize: 20),
+                          )
                         ],
                       ),
                     ),
-                    // Container(
-                    //   margin: EdgeInsets.only(top: 15),
-                    //   width: double.infinity,
-                    //   height: 40,
-                    //   decoration: BoxDecoration(
-                    //     color: cardlist,
-                    //   ),
-                    //   child: Column(
-                    //     mainAxisAlignment: MainAxisAlignment.center,
-                    //     children: [
-                    //       Text(
-                    //         "${produk.cstatus}",
-                    //         style: TextStyle(fontSize: 20),
-                    //       )
-                    //     ],
-                    //   ),
-                    // ),
-                    // Container(
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       TextFormField(
-                    //         decoration: InputDecoration(
-                    //           hintText: 'Masukkan Status Alat',
-                    //           border: OutlineInputBorder(),
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // Container(
-                    //   margin: EdgeInsets.only(top: 15),
-                    //   width: double.infinity,
-                    //   height: 40,
-                    //   decoration: BoxDecoration(
-                    //     color: cardlist,
-                    //   ),
-                    //   child: Column(
-                    //     mainAxisAlignment: MainAxisAlignment.center,
-                    //     children: [
-                    //       Text(
-                    //         "${produk.cstatus}",
-                    //         style: TextStyle(fontSize: 20),
-                    //       )
-                    //     ],
-                    //   ),
-                    // ),
-                    // Container(
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       TextFormField(
-                    //         decoration: InputDecoration(
-                    //           hintText: 'Masukkan Status Alat',
-                    //           border: OutlineInputBorder(),
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    DropdownSearch<String>(
+                      items: dataDropdown,
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                          dropdownSearchDecoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: Colors.grey, width: 1),
+                                  borderRadius: BorderRadius.circular(8)))),
+                      selectedItem: dataDropdown[0],
+                      onChanged: (value) {
+                        // status = value!;
+                        option1 = value!;
+                      },
+                      dropdownBuilder: (context, selectedItem) {
+                        return selectedItem == null
+                            ? Text(dataDropdown[0])
+                            : Text(selectedItem);
+                      },
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 12),
+                      width: double.infinity,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: cardlist,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "${scandetailvalue[2].namaStatus}",
+                            style: TextStyle(fontSize: 20),
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    DropdownSearch<String>(
+                      items: dataDropdown,
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                          dropdownSearchDecoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: Colors.grey, width: 1),
+                                  borderRadius: BorderRadius.circular(8)))),
+                      selectedItem: dataDropdown[0],
+                      onChanged: (value) {
+                        // status = value!;
+                        option1 = value!;
+                      },
+                      dropdownBuilder: (context, selectedItem) {
+                        return selectedItem == null
+                            ? Text(dataDropdown[0])
+                            : Text(selectedItem);
+                      },
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     Container(
                       margin: EdgeInsets.only(top: 15),
                       width: 150,
