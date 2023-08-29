@@ -35,9 +35,10 @@ class _DetailScanState extends State<DetailScan> {
   //   );
   // }
   late String SelectName;
-  late cGetScan produk;
+  // late Pesan produk;
   // var produk;
   // late Map<String, dynamic> produk;
+  List<Pesan> scandetailvalue = [];
 
   Future<void> get_data() async {
     try {
@@ -47,11 +48,21 @@ class _DetailScanState extends State<DetailScan> {
         ),
       );
 
+      print("isinya ${response.body}");
+
       if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         setState(() {
-          produk = cGetScan.fromJson(jsonData);
-          print('Error Hasil: $produk');
+          List scandetail = jsonData['pesan'];
+          
+
+          for (var item in scandetail) {
+            scandetailvalue.add(
+              Pesan.fromJson(item),
+            );
+          }
+          // produk = Pesan.fromJson(jsonData);
+          // print('Error Hasil: $produk');
         });
       } else {
         throw Exception('Gagal mengambil data');
@@ -85,7 +96,7 @@ class _DetailScanState extends State<DetailScan> {
           ),
         ),
         backgroundColor: bgdefault,
-        body: produk == null
+        body: scandetailvalue.isEmpty
             ? Text(
                 "Produk Tidak Ditemukan, ${widget.kode}",
                 style: TextStyle(fontSize: 20),
@@ -96,18 +107,18 @@ class _DetailScanState extends State<DetailScan> {
                 child: Column(
                   children: <Widget>[
                     Text(
-                      "${produk.calat}",
+                      "${scandetailvalue[0].namaAlat}",
                       style: TextStyle(fontSize: 20),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 15),
                     ),
-                    Image.network("${produk.cgambar}"),
+                    Image.network("${scandetailvalue[0].images}"),
                     Padding(
                       padding: EdgeInsets.only(top: 15),
                     ),
                     Text(
-                      "No Material : ${produk.cmaterial}",
+                      "No Material : ${scandetailvalue[0].noMaterial}",
                       style: TextStyle(fontSize: 20),
                     ),
                     Container(
@@ -117,12 +128,11 @@ class _DetailScanState extends State<DetailScan> {
                       decoration: BoxDecoration(
                         color: cardlist,
                       ),
-
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "${produk.cstatus}",
+                            "${scandetailvalue[0].namaStatus}",
                             style: TextStyle(fontSize: 20),
                           )
                         ],

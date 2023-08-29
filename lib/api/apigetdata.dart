@@ -1,23 +1,23 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-// import 'package:skripsi/models/model_data_alat.dart';
-import 'package:skripsi/models/model_get_scan.dart';
+// import 'dart:convert';
+// import 'package:http/http.dart' as http;
+// // import 'package:skripsi/models/model_data_alat.dart';
+// import 'package:skripsi/models/model_get_scan.dart';
 
-class Service {
-  Future<List<cGetScan>> getAllData() async {
-    final response = await http.get(
-      // Uri.parse("https://6283762138279cef71d77f41.mockapi.io/api/v1/Data"),
-      Uri.parse(
-          "https://skripsikdng.000webhostapp.com/tampil_data_pengecekan.php"),
-    );
-    if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body);
-      return jsonResponse.map((data) => cGetScan.fromJson(data)).toList();
-    } else {
-      throw Exception('Failed to load Data');
-    }
-  }
-}
+// class Service {
+//   Future<List<Pesan>> getAllData() async {
+//     final response = await http.get(
+//       // Uri.parse("https://6283762138279cef71d77f41.mockapi.io/api/v1/Data"),
+//       Uri.parse(
+//           "https://skripsikdng.000webhostapp.com/tampil_data_pengecekan.php"),
+//     );
+//     if (response.statusCode == 200) {
+//       List jsonResponse = json.decode(response.body);
+//       return jsonResponse.map((data) => Pesan.fromJson(data)).toList();
+//     } else {
+//       throw Exception('Failed to load Data');
+//     }
+//   }
+// }
 
 // class Service {
 //   Future<List<cDataAlat>> getAllData() async {
