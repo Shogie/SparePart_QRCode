@@ -20,11 +20,53 @@ class DetailScan extends StatefulWidget {
 class _DetailScanState extends State<DetailScan> {
   late String SelectName;
   List<Pesan> scandetailvalue = [];
-  late String option1;
-  late String option2;
-  late String option3;
+  String option1 = "";
+  String option2 = "";
+  String option3 = "";
+
+  String id1 = "";
+  String id2 = "";
+  String id3 = "";
+
+  late bool statusUpdate;
 
   List<String> dataDropdown = ["Normal", 'Tidak Normal/Rusak'];
+
+  Future<void> updateDataAlat() async {
+    try {
+      var body = {
+        'id_status1': id1,
+        'id_status2': id2,
+        'id_status3': id3,
+        'status1': option1,
+        'status2': option2,
+        'status3': option3,
+      };
+
+      var response = await http.post(
+          Uri.parse(
+            "https://skripsikdng.000webhostapp.com/update_data_scan.php",
+          ),
+          body: body);
+
+      var jsonData = jsonDecode(response.body);
+
+      print("coba $jsonData");
+      setState(() {
+        var status = jsonData['response']['status'];
+
+        if (status == "true") {
+          status = true;
+        } else {
+          statusUpdate = false;
+          throw (jsonData['response']['desc']);
+        }
+      });
+    } catch (error) {
+      // print("Error haha : ${widget.kode}");
+      rethrow;
+    }
+  }
 
   Future<void> get_data() async {
     try {
@@ -46,6 +88,10 @@ class _DetailScanState extends State<DetailScan> {
               Pesan.fromJson(item),
             );
           }
+
+          id1 = scandetailvalue[0].idStatus;
+          id2 = scandetailvalue[1].idStatus;
+          id3 = scandetailvalue[2].idStatus;
           // produk = Pesan.fromJson(jsonData);
           // print('Error Hasil: $produk');
         });
@@ -67,6 +113,7 @@ class _DetailScanState extends State<DetailScan> {
 
   @override
   Widget build(BuildContext context) {
+    statusUpdate = false;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -185,7 +232,7 @@ class _DetailScanState extends State<DetailScan> {
                       selectedItem: dataDropdown[0],
                       onChanged: (value) {
                         // status = value!;
-                        option1 = value!;
+                        option2 = value!;
                       },
                       dropdownBuilder: (context, selectedItem) {
                         return selectedItem == null
@@ -230,7 +277,7 @@ class _DetailScanState extends State<DetailScan> {
                       selectedItem: dataDropdown[0],
                       onChanged: (value) {
                         // status = value!;
-                        option1 = value!;
+                        option3 = value!;
                       },
                       dropdownBuilder: (context, selectedItem) {
                         return selectedItem == null
@@ -247,7 +294,24 @@ class _DetailScanState extends State<DetailScan> {
                       height: 50,
                       child: TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/homepage');
+                          if ((option1.isNotEmpty) ||
+                              (option2.isNotEmpty) ||
+                              (option3.isNotEmpty)) {
+                            updateDataAlat();
+
+                            if (statusUpdate) {
+                              Navigator.pushNamed(context, '/homepage');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Berhasil Update !")));
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Gagal Update !")));
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content:
+                                    Text("Lengkapi terlebih dahulu form !")));
+                          }
                         },
                         style: TextButton.styleFrom(
                           backgroundColor: btngetstarted,
